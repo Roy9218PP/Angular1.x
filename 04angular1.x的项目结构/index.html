@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>angular项目结构</title>
+		<!--引入css样式-->
+		<link rel="stylesheet" type="text/css" href="css/all.css"/>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/darkly/bootstrap.min.css">
+		
+		<!--引入第三方-->
+		<script src="libs/angular.js"></script>
+		<script src="libs/angular-animate.js"></script>
+		<script src="libs/angular-ui-router.js"></script>
+		
+		<!--引入所有服务-->
+		<script src="service/myService.js"></script>
+		
+		<!--引入所有过滤器-->
+		<script src="filters/myFilter.js"></script>
+		
+		<!--引入所有指令-->
+		<script src="directives/myDirective.js"></script>
+		
+		<!--引入所有的controller-->
+		<script src="controllers/formController.js"></script>
+		<script src="controllers/form-profileController.js"></script>
+		<script src="controllers/form-interestController.js"></script>
+		<script src="controllers/form-paymentController.js"></script>
+		
+		
+		<!--引入angular项目启动的核心文件-->
+		<script src="js/app.js"></script>
+		
+	</head>
+	<body ng-controller="ctrl">
+		<!--设置挂载点-->
+		<ui-view></ui-view>
+	</body>
+</html>

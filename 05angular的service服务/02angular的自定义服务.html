@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义服务</title>
+		<script src="../angular.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		
+	</body>
+	<script type="text/javascript">
+		//angular提供方了大概5中自定义服务的方式，用来定义不同的服务。
+		angular.module('app',[])
+		//config()是用来对该模块进行初始化配置的方法，比如可以在此处配置一些服务和路由等等
+		//$provider是一个服务供应商，可以定义很多服务
+		.config(['$provide',function($provide){
+			
+			$provide.constant('constSer',"this is a const again!!!!!")
+		}])
+		.controller('ctrl',["$scope","constService","constSer","serService",'facService',function($scope,constService,constSer,serService,facService){
+			
+			alert(constService)
+			
+			alert(constSer)
+			
+			alert(serService.name)
+			
+			alert(serService.age)
+			
+			serService.eat()
+			
+			alert(facService)
+			
+			
+		}])
+		//1,constant()用来定义一个常量服务.另外定义一个常量的服务还可以有另外一种方式:在app.config()中定义(见上边config方法)
+		.constant('constService','this is a const')
+		//2,value()它和constant类似，都是用来获取一个值，只不过value不可以在config被注入和定义。它的参数值可以是string、number甚至是function
+		.value('valueService',function(param){
+			
+			param = param + '.00'
+			
+			return param
+		})
+		//3,service()方法定义一个服务。该方式定义的服务相当于使用new 构建了一个对象，所以可以使用this在该对象内添加属性，这样一来在我们依赖注入该服务后得到的就是new的对象
+		.service('serService',function(){
+			
+			this.name = 'serService'
+			
+			this.age = 28
+			
+			this.eat = function(){
+				alert('吃饭了')
+			}
+			
+			
+		})
+		//4,factory()即一个工厂函数，用来返回运算后的一个对象。它和service的不同之处在于，他只是一个函数，而service是一个constructor构造器。所以factory可以返回任意类型的对象。
+		.factory('facService',function(){
+			
+			return {
+				name:"xxx"
+			}
+		})
+		//5,provider()。provider是为一个可以创建用来注入到config方法的服务。另外它是以上方法(除了constant)的老大，即其他方法都是在其基础上封装的。
+		.provider('proService',function(){
+			
+			//provider定义的服务需要返回一个对象，并在该对象内有一个$get函数，用来返回服务提供的内容。所以其实它是一个更加强大的factory和service
+			return {
+				$get:function(){
+					
+					return function(){
+						
+					}
+					
+					//return {}
+				}
+			}
+		})
+		
+		
+		//另外angular的服务和过滤器可以被controller依赖注入也可以被其他的服务和过滤器依赖注入。
+	</script>
+</html>

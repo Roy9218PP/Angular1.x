@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--ng-app指令是angular应用的挂载点，同时也都是规定了应用的有效作用域-->
+<html ng-app="">
+	<head>
+		<meta charset="UTF-8">
+		<title>angular入门</title>
+		<script src="../angular.js"></script>
+	</head>
+	<!--ng-init用来初始化一些数据,数据之间用';'分隔-->
+	<body ng-init="name='angular';age=8">
+		<h1>Hello {{name}},I am {{age}} years old</h1>
+		
+		<!--ng-bind和v-bind不一样，它是把某一个变量和元素的innerHTML进行绑定-->
+		<h3>ng-bind绑定的name是:<span ng-bind="name"></span></h3>
+		
+		<!--ng-model是一个双向数据绑定的指令-->
+		<input type="text" ng-model="name" />
+		<h1> Hello <span ng-bind="name"></span>,I am <span ng-bind="age"></span> years old</h1>
+		
+		<ul ng-init="frameWorks = ['Angular','Vue','React']">
+			前端三大框架:
+			<li ng-repeat="item in frameWorks">
+				{{item}}
+			</li>
+		</ul>
+	</body>
+</html>

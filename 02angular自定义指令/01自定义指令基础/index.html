@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../../angular.js"></script>
+	</head>
+	<!--ctrl as ct给controller起一个别名叫做ct-->
+	<body ng-controller="ctrl as vm">
+		
+		<h1>$scope的name = {{name}}</h1>
+		
+		<h1>ctrl的age = {{vm.age}}</h1>
+		
+		<h1>$scope的city  = {{city}}</h1>
+		
+		<!--元素型指令-->
+		<roy>
+			<h3>这是指令内的内容</h3>
+		</roy>
+		
+		<!--属性型指令-->
+		<div roy></div>
+		
+		<!--class类型指令-->
+		<div class="roy"></div>
+		
+		<!--注释型指令-->
+		<!--directive:roy-->
+		
+	</body>
+	<script type="text/javascript">
+		
+		angular.module('app',[])
+		.controller('ctrl',['$scope',"$rootScope",function($scope,$rootScope){
+			//这里的this指的是controller对象
+			//this和$scope都可以往当前controller内添加或是获取变量，但是$scope在获取变量是一种原型继承的方式获取的，即当前scope没有就去上层作用域的scope获取，直到找到$rootScope位置。
+			//this定义的变量只在当前controller获取
+			console.log(this)
+			$scope.name = 'angular'
+			
+			this.age = 8
+			
+			$rootScope.city = '南京'
+			
+			$scope.test = 'xxx'
+			
+			
+		}])
+		//.directive自定义指令的方法
+		.directive('roy',function(){
+			
+			return {
+				
+				//restrict指定该指令的类型
+				//A:attribute 即属性型指令。
+				//C:class class属性指令。
+				//E:element 元素型指令。
+				//M:comment 注释型指令。
+				//可以组合使用
+				restrict:'EACM',
+				
+				template:"<h1>这是一个自定义指令的模板</h1><div ng-transclude></div>",
+				
+				//tamplateUrl:""
+				
+				//设置该指令对应的controller
+				//controller:"royCtrl",
+				
+				//controller别名
+				controllerAs:"royCT",
+				
+				//controller还可以直接在这里实现
+				controller:["$scope",function($scope){
+					//alert('ooooo')
+					$scope.test = 'this is a test'
+					this.vm = 'royCtrl'
+				}],
+				
+				//transclude是一个Boolean值，用来代表是否把指令内部标记的内容插入到ng-transclude指令所在的位置。类似于Vue的slot插槽。
+				transclude:true,
+				
+				//link主要提供一个操作，用来对指令的模板进行操作
+				//参数1:当前指令对应的controller作用域
+				//参数2:指令模板的标签元素
+				//参数3:指令添加的属性
+				//参数4:指令对应的controller别名
+				link:function(scope,ele,attr,royCT){
+					
+					ele.on('click',function(){
+						console.log(scope)
+						alert(scope.test)
+						alert(royCT.vm)
+					})
+				}
+			}
+		})
+		.controller('royCtrl',['$scope',function($scope){
+			//alert('xxx')
+			$scope.test = 'this is a test'
+			
+			this.vm = 'royCtrl'
+		}])
+	</script>
+</html>

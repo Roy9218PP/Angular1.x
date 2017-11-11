@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>内置服务</title>
+		<script src="../angular.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		
+	</body>
+	
+	<!--
+		angular和Vue所谓的服务只是一个概念，并且和服务端没有任何关系。这里的服务其实就是封装了特定功能的一个函数或是对象，提供给模块来使用。
+	-->
+	<script type="text/javascript">
+		angular.module('app',[])
+		.controller('ctrl',["$scope","$location","$http","$timeout","$interval",function($scope,$location,$http,$timeout,$interval){
+			
+			//$location是angular提供的一个内置服务，用来获取或是设置页面的地址等信息
+			alert($location.absUrl())
+			
+			//$http是angular提供的发送ajax请求的内置服务
+			/*
+			$http.get('/user/login').then(function(res){
+				
+			})
+			$http.post('/user/login').then(function(res){
+				
+			})
+			*/
+			
+			//$timeout和$interval是对setTimeout和setInterval的封装
+			$timeout(function(){
+				alert('time out')
+			},1000)
+		}])
+	</script>
+</html>

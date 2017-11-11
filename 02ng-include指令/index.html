@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>ng-include指令</title>
+		<script src="../angular.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		<h1>这是页面内容</h1>
+		<!--ng-include指令用来引入一个模板文件到当前的页面。
+			但是需要注意:ng-include的指令的值是一个模板文件的地址，同时改地址需要使用引号标记起来。
+		-->
+		<div ng-include="'test1.html'"></div>
+		
+		<!--假如引入的模板包含ng-controller指令则需要提前定义好该controller的实现。
+			另外不要再模板中包含script标签，即便包含则该标签也是无效的。
+		-->
+		<div ng-include="'test2.html'"></div>
+	</body>
+	<script type="text/javascript">
+		angular.module('app',[])
+		.controller('ctrl',['$scope',function(){
+			
+		}])
+		.controller('ctrl2',function($scope){
+		
+		})
+	</script>
+</html>

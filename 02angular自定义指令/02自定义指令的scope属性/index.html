@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../../angular.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		<h1>ctrl的内容</h1>
+		<input type="text" ng-model="name" />
+		<p>输入的name是: <strong>{{name}}</strong></p>
+		<input type="number" ng-model="age" />
+		<p>输入的age是: <strong>{{age}}</strong></p>
+		
+		<roy roy-name="{{name}}" roy-age="age" roy-click="myClick()"></roy>
+	</body>
+	<script type="text/javascript">
+		
+		angular.module('app',[])
+		.controller('ctrl',['$scope',function($scope){
+			
+			$scope.name = 'angular'
+			
+			$scope.age = 8
+			
+			$scope.myClick = function(){
+				
+				alert('上层click')
+			}
+			
+		}])
+		.directive('roy',function(){
+			
+			return {
+				
+				restrict:"AECM",
+				
+				templateUrl:"tepls.html",
+				
+				controller:'royCtrl',
+				
+				//自定义指令的作用域和上层作用域是会相互影响
+				//scope属性的值假如是一个Boolean代表是否划分独立作用域，不会影响上层作用域
+				//scope:true
+				
+				//scope的值还可以是一个对象，用来配置和父作用域进行变量绑定
+				//"@"代表绑定父作用域的String类型变量(单向绑定),注意需要在指令内部定义属性和scope内某一个属性实现@绑定，并且在指令内使用{{}}绑定父作用域的变量
+				//"="代表和父作用域进行双向绑定
+				//'&'代表绑定父作用域的函数变量(单向绑定)
+				scope:{
+					
+					//此处@、=、&绑定的变量使用驼峰命名法得话，在指令内需要使用'-'做连接符
+					rName:"@royName",
+					rAge:'=royAge',
+					rClick:'&royClick'
+				}
+			}
+		})
+		.controller('royCtrl',["$scope",function($scope){
+			
+		}])
+	</script>
+</html>

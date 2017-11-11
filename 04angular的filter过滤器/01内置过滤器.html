@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>内置过滤器</title>
+		<script src="../angular.js"></script>
+	</head>
+	<!--
+		ng-strict-di代表采用严格/标准的依赖注入方式，添加依赖项项，并把依赖项注入到函数内部。
+	
+		ng-strict-di:是代表强制使用一种标准的依赖注入方法。
+		在Angular中，如果想使用模块中的内容，只需要提供它的名称即可，不需自己查找、创建、初始化等等，就可以直接得到并使用。这种通过提供名称获得对象/函数/值等内容的过程叫做“依赖注入”。
+		但是！因为JS代码压缩（Grunt/Uglify）的时候，参数的名字会被压缩成一个字母，导致参数的名字发生变化，从而使“注入”失败。
+
+		所以Angular推荐使用下面的方式使用模块中的内容，即将名称写在函数之前，并将名称和函数都放在一个数组中：
+
+		而使用 ng-strict-di 这个指令的作用就是：可以强制使用这种标准的注入写法（如果不这样写，就是直接报错）。
+
+	-->
+	<body ng-controller="ctrl" ng-strict-di>
+		<!--currency是货币格式的过滤器-->
+		<input type="number" ng-model="price" />
+		<p>输入的价格是: <strong>{{price | currency}}</strong></p>
+		
+		<p>输入的价格是: <strong>{{price | currency:"￥"}}</strong></p>
+		
+		<p>输入的价格是: <strong>{{price | currency:"价格:"}}</strong></p>
+		
+		<input type="text" ng-model="msg"/>
+		<p>输入的小写格式为:{{msg | lowercase}}</p>
+		<p>输入的大写格式为:{{msg | uppercase}}</p>
+		
+		<!--number负责把数字格式化为数字字符串，并且可以保留小数位-->
+		<input type="number" ng-model="num" />
+		<p>输入的数字是: <strong>{{num | number:"2"}}</strong></p>
+		
+		
+		<p>json后的对象是: <strong>{{obj | json}}</strong></p>
+		
+		<!--limitTo限定长度-->
+		<ul ng-init="books = ['HTML5','CSS3','JS','Angular']">
+			<li ng-repeat="aBook in books | limitTo:2">
+				{{aBook}}
+			</li>
+		</ul>
+		
+		<input type="text" ng-model="content" />
+		
+		<p>输入的30个字符是: <strong>{{content | limitTo:30}}</strong></p>
+		
+		<textarea  rows="5" cols="30" placeholder="请输入您的评价" oninput="this.value=this.value.substr(0,30)"></textarea>
+		
+		
+		<!--date日期过滤器-->
+		<p>当前日期是: <strong>{{date | date:"yyyy年MM月dd日 HH:mm:ss a EEEE"}}</strong></p>
+		
+		<input type="text" ng-model="xxx" />
+		<p>过滤包含的s字符: <strong>{{xxx | filter:"s"}}</strong></p>
+		
+		<!--orderBy是按照指定条件进行排序。优先考虑第一个条件，如果第一个不满足才考虑第二个条件-->
+		<ul ng-init="users = [{name:'roy',age:28},{name:'tom',age:30},{name:'jobs',age:60}]">
+			<li ng-repeat="user in users | orderBy:['name','age']">
+				{{user}}
+			</li>
+		</ul>
+	</body>
+	
+	<script type="text/javascript">
+		angular.module('app',[])
+		.controller('ctrl',['$scope',"$filter",function($scope,$filter){
+			
+			$scope.price = 0
+			
+			$scope.msg = 'this is a msg!'
+			
+			$scope.obj = {
+				//注释
+				name:'roy',
+				age:28
+			}
+			
+			$scope.content  = ""
+			
+			$scope.date = new Date()
+			
+			//在js中使用过滤器，需要依赖$filter服务,即要在controller依赖注入。
+			//$filter(过滤器名称) 用来加载指定的过滤器
+			var numFilter =  $filter("number")
+			
+			//使用过滤器过滤指定数据
+			var result =  numFilter(123456,2)
+			
+			alert(result)
+		}])
+	</script>
+</html>

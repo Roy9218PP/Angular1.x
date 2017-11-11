@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>ui-router路由嵌套</title>
+		<script src="angular.js"></script>
+		<script src="angular-ui-route.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		
+		<ul>
+			<li ng-repeat="aRoute in routeList">
+				<a ui-sref="{{aRoute.state}}">{{aRoute.name}}</a>
+			</li>
+		</ul>
+		
+		<ui-view></ui-view>
+	</body>
+	<script type="text/javascript">
+		
+		angular.module('app',['ui.router'])
+		.config(['$stateProvider','$qProvider',"$urlRouterProvider",function($stateProvider,$qProvider,$urlRouterProvider){
+			//$qProvider.errorOnUnhandledRejections(false);
+			
+			$stateProvider
+			.state('baidu',{
+				url:"/baidu",
+				//template:"<h1>百度</h1><ui-view></ui-view>"
+				templateUrl:"tepls/baidu.html"
+			})
+			//ui-router的路由嵌套其实就是状态的嵌套，状态嵌套是依靠打点链式嵌套实现
+			.state('baidu.tmall',{
+				url:"/tmall",
+				//template:"<h1>tmall</h1>",
+				templateUrl:"tepls/tmall.html"
+			})
+			.state('baidu.tmall.tencent',{
+				url:"/tencent",
+				//template:"<h1>Tencent</h1>"
+				templateUrl:"tepls/tencent.html"
+			})
+			
+			//$urlRouterProvider.otherwise设置默认加载的路由
+			$urlRouterProvider.otherwise('/baidu/tmall/tencent')
+			
+		}])
+		.controller('ctrl',['$scope',function($scope){
+			
+			$scope.routeList = [{
+				name:"百度",
+				route:"#/baidu",
+				state:"baidu"
+			},{
+				name:"天猫",
+				route:"#/tmall",
+				state:"baidu.tmall"
+			},{
+				name:"腾讯",
+				route:"#/tencent",
+				state:"baidu.tmall.tencent"
+			}]
+		}])
+	</script>
+</html>

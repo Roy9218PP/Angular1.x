@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>ui-router</title>
+		<script src="../angular.js"></script>
+		<script src="angular-ui-router.min.js"></script>
+	</head>
+	<!--
+		angular的ui-router模块是另外一种控制路由切换的模块，它主要是通过监听或是修改路由的状态(state)来实现路由操作的。它和ngRoute的不同之处就在ngRoute是直接操作和监听路由，而ui-roputer可以直接操作路由，也可以操作状态进而操作路由。
+		
+		ui-router是依靠一个$stateProvider来监听路由的状态变化，进而执行相应的操作的。
+		
+		ui-router有三种方式操作路由:
+		1,使用URL操作路由。(和ngRoute一样)
+		2,使用官方推荐方式:ui-sref 和 state组合方式
+		3,$state.go()函数式编程方式
+	-->
+	<body ng-controller="ctrl">
+		
+		<ul>
+			使用URL操作路由
+			<li ng-repeat="aRoute in routeList">
+				<a href="{{aRoute.route}}">{{aRoute.name}}</a>
+			</li>
+		</ul>
+		
+		
+		<ul>
+			使用state操作路由
+			<li ng-repeat="aRoute in routeList">
+				
+				<!--ui-sref是ui-router提供的设置路由状态的指令-->
+				<a ui-sref="{{aRoute.state}}">{{aRoute.name}}</a>
+			</li>
+		</ul>
+		
+		<p>$state.go()控制路由</p> 
+		<button ng-click="stateGo('baidu')">baidu</button>
+		<button ng-click="stateGo('tmall')">tmall</button>
+		<button ng-click="stateGo('tencent')">tencent</button>
+		
+			
+		<!--ui-view是ui-router提供的路由模板的挂载指令-->
+		<ui-view></ui-view>
+	</body>
+	
+	<script type="text/javascript">
+		//设置依赖ui.router模块
+		angular.module('app',['ui.router'])
+		.config(['$stateProvider',"$locationProvider",function($stateProvider,$locationProvider){
+			
+			$locationProvider.hashPrefix("")
+			
+			//使用state()监听路由状态
+			$stateProvider
+			.state('baidu',{
+				url:"/baidu",
+				template:"<h1>这是百度的页面</h1>"
+			})
+			.state('tmall',{
+				url:"/tmall",
+				template:"<h1>这是tmall的页面</h1>"
+			})
+			.state('tencent',{
+				url:"/tencent",
+				template:"<h1>这是tencent的页面</h1>"
+			})
+		}])
+		.controller('ctrl',["$scope",'$state',function($scope,$state){
+			
+			$scope.routeList = [{
+				name:"百度",
+				route:"#/baidu",
+				state:"baidu"
+			},{
+				name:"天猫",
+				route:"#/tmall",
+				state:"tmall"
+			},{
+				name:"腾讯",
+				route:"#/tencent",
+				state:"tencent"
+			}]
+			
+			$scope.stateGo = function(param){
+				
+				alert(param)
+				
+				//$state.go()控制路由状态变化。其中$state是需要依赖注入的一个服务
+				$state.go(param)
+			}
+			/*
+			 *  ● $stateChangeError
+				● $stateChangeStart
+				● $stateChangeSuccess
+				● $stateNotFound
+			 */
+			$scope.$on('$stateChangeStart',function(event){
+				
+				alert('路由状态将要改变了')
+			}) 
+		}])
+	</script>
+</html>

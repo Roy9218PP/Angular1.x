@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义过滤器</title>
+		<script src="../angular.js"></script>
+	</head>
+	<body ng-controller="ctrl">
+		<h1>{{book}}</h1>
+		<div>{{msg}}</div>
+	</body>
+	
+	<script type="text/javascript">
+		angular.module('app',[])
+		//注意所有的自定义过滤器在使用的时候都可以直接通过名称依赖注入的方式引用，但是过滤器名称后面必需追加一个"Filter"后缀
+		.controller('ctrl',['$scope','royFilterFilter',"testFilter",function($scope,royFilterFilter,testFilter){
+			
+			var result =  royFilterFilter('西游记')
+			
+			alert(result)
+			
+			$scope.book = result
+			
+			$scope.msg = testFilter('红楼梦')
+		}])
+		//filter()是APP模块用来定义过滤器的方法
+		//参数1:过滤器名称
+		//参数2:回调函数
+		
+		.filter('royFilter',function(){
+			
+			//返回的是一个函数,即过滤器的操作函数，参数就是要过滤的数据
+			return function(param){
+				
+				return "《" + param + "》"
+			}
+		})
+		//自定义过滤器还可以调用其他过滤器或是服务，使用方式依然是依赖注入
+		.filter('test',["royFilterFilter",function(royFilterFilter){
+			
+			return function(param){
+				
+				var result =  royFilterFilter(param)
+				
+				return `***${result}*** `
+			}
+		}])
+	</script>
+</html>

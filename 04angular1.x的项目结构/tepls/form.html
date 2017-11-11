@@ -1,0 +1,36 @@
+<!-- form.html -->
+<div class="row">
+	<div class="col-sm-8 col-sm-offset-2">
+
+		<div id="form-container">
+
+			<div class="page-header text-center">
+				
+				<h2>Let's Be Friends</h2>
+
+			
+				<div id="status-buttons" class="text-center">
+					
+					<!--
+						ui-sref 指令链接到特定状态
+						ui-sref-active 查看当前激活状态并设置 Class属性值为active(即ui-sref指令对应的状态被激活之后，假如设置ui-sref-active="active"指令，会在对应的标签元素上添加Class属性值为active)
+					-->
+					<a ui-sref-active="active" ui-sref=".profile"><span>1</span> Profile</a>
+					<a ui-sref-active="active" ui-sref=".interest"><span>2</span> Interests</a>
+					<a ui-sref-active="active" ui-sref=".payment"><span>3</span> Payment</a>
+				</div>
+			</div>
+
+			<form id="signup-form" ng-submit="processForm()">
+				
+				<!--把下一个模板的内容嵌入到此处-->
+				<div id="form-views" ui-view></div>
+				
+			</form>
+
+		</div>
+
+		
+
+	</div>
+</div>

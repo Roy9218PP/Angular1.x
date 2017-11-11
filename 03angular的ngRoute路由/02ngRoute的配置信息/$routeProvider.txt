@@ -1,0 +1,37 @@
+路由功能是由 routeProvider服务 和 ng-view 搭配实现，ng-view相当于提供了页面模板的挂载点，当切换URL进行跳转时，不同的页面模板会放在ng-view所在的位置; 然后通过 routeProvider 配置路由的映射。
+一般主要通过两个方法：
+
+when()：配置路径和参数;
+
+otherwise：配置其他的路径跳转，可以想成default。
+when的第二个参数：
+
+controller：对应路径的控制器函数，或者名称
+
+controllerAs：给控制器起个别名
+
+template：对应路径的页面模板，会出现在ng-view处,比如"<div>xxxx</div>"
+
+templateUrl：对应模板的路径，比如"src/xxx.html"
+
+resolve： 这个参数着重说下，该属性会以键值对对象的形式，给路由相关的控制器绑定服务或者值。然后把执行的结果值或者对应的服务引用，注入到控制器中。如果resolve中是一个promise对象，那么会等它执行成功后，才注入到控制器中，此时控制器会等待resolve中的执行结果。
+
+详细的例子，可以参考下面的样例。
+
+redirectTo：重定向地址
+
+caseInsensitiveMatch ：路径区分大小写
+路由有几个常用的事件：
+
+$routeChangeStart：这个事件会在路由跳转前触发
+
+$routeChangeSuccess：这个事件在路由跳转成功后触发
+
+$routeChangeError：这个事件在路由跳转失败后触发
+
+
+在$route(路由)中，提供了两个依赖性服务：$location、$routeParams； $location、$routeParams均可在controller中使用，可通过$routeParams获取路由时所传参数，可通过$location进行路由跳转。
+
+
+
+

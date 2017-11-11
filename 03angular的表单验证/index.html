@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>angular的表单验证</title>
+		<script src="../angular.js"></script>
+	</head>
+	<!--
+		对于angular中使用form表单一般:
+			1,不需要action、method等属性
+			2,添加name属性和novalidate属性(用来关闭表单的默认验证功能)
+			3,form表单的提交事件通过ng-submit实现。
+			
+			常用属性：
+			$pristine  boolean	表单元素是否是干净的（未被修改过）
+			$dirty  boolean  表单是否被修改过（任意一个表单元素被修改都算数）
+			$valid   boolean  整个表单是否验证通过
+			$invalid   boolean	表单是否未通过验证
+			$pending   boolean	   表单是否有挂起的（未完成的，主要是异步验证）验证
+			$submitted   boolean  是否已经提交过（如点击过提交按扭但是验证失败了）
+			$error  Object  包含了所有未通过验证的验证规则。该$error对象包含验证的属性名称(是angular提供的属性名称)以及该属性是否验证通过的Boolean值。其中true代表验证失败(即没有验证通过)，false代表验证成功/合法。
+
+	-->
+	<body ng-controller="ctrl">
+		<form name="myForm" ng-submit="mySubmit()" novalidate="novalidate">
+
+			<p>验证用户名:</p>
+			<!--ng-pattern是正则验证指令-->
+			<input type="text" ng-model="userName" name="myName" id="myName" placeholder="请输入用户名" ng-pattern="'[a-z0-9A-Z_]{2,8}'" required />
+			<!--
+				myForm.myName.$pristine 判断form的myName属性的input为是否是没有编辑过
+			-->
+			<span style="color: red;" ng-show="myForm.myName.$pristine">【必填】</span>
+			
+			<!--已经编辑过 && 没有验证通过-->
+			<span style="color:red" ng-show="myForm.myName.$dirty && myForm.myName.$invalid">
+				
+				<span ng-show="myForm.myName.$error.required">【用户名是必须的】</span>
+
+				<span ng-show="myForm.myName.$error.pattern" style="color: red;">【当前输入不合法】</span>
+
+			</span>
+			
+			<br />
+			<span>{{myForm.myName.$error}}</span>
+			
+			
+			
+			<p>验证邮箱:</p>
+			<input type="email" name="myEmail" ng-model="email" required />
+				
+				<span ng-show="myForm.myEmail.$pristine" style="color: orange;">【必填】</span>
+				
+				<span style="color:red" ng-show="myForm.myEmail.$dirty && myForm.myEmail.$invalid">
+					<span ng-show="myForm.myEmail.$error.required">邮箱是必须的。</span>
+					<span ng-show="myForm.myEmail.$error.email">非法的邮箱地址。</span>
+		
+	</body>
+	<script type="text/javascript">
+		
+		angular.module('app',[])
+		.controller('ctrl',['$scope',function($scope){
+			
+			$scope.mySubmit = function(){
+				
+			}
+		}])
+	</script>
+</html>

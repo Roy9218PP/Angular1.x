@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>$scope和$rootScope</title>
+		<script src="../angular.js"></script>
+	</head>
+	<body>
+		<!--第一个ng-app-->
+		<div ng-app="app1">
+			<!--ng-app和ng-controller之间的作用域是相互独立的。直接点来讲就是模块之间是一个相互独立的作用域。这也是angular的一种设计思想:尽量不去污染全局作用域，且作用域之间互不影响-->
+			
+			<div ng-controller="ctrl1">
+				
+				<h1>Hello {{name}}</h1>
+				
+				<h3>I am {{age}} years old</h3>
+				
+				<h1>{{msg}}</h1>
+			</div>
+			
+			<h1>Hello {{name}}</h1>
+			<h3>I am {{age}} years old</h3>
+			<h1>{{msg}}</h1>
+			
+			<div ng-controller="ctrl11">
+				<h1>Hello {{name}}</h1>
+				
+				<h3>I am {{age}} years old</h3>
+				
+				<h1>{{msg}}</h1>
+			</div>
+		</div>
+		
+		<h1>Hello {{name}}</h1>
+		
+		<!--第二个ng-app-->
+		<div ng-app="app2" id="ngApp2">
+			
+			<div ng-controller="ctrl2">
+				<h1>I am {{age}} years old</h1>
+			</div>
+			
+			<h1>-----{{msg}}-----</h1>
+		</div>
+		
+		<!--angular允许一个页面存在多个ng-app，但是默认情况下只有第一个会被自动启动，其他的需要手动启动
+			启动方式是调用angular.bootstrap()
+			并且需要注意:该方法只能放在模块所有配置代码之后
+		-->
+	</body>
+	<script type="text/javascript">
+		/*
+		 * $scope代表的是当前controller的作用域，因此使用$scope定义或是访问的变量只能在该controller内有效
+		 * 
+		 * $rootScope代表的是当前APP的作用域，因此使用$rootScope定义的变量只能在该ng-app内有效
+		 * 
+		 * $rootScope定义的变量可以被当前$scope访问，但是反过来则不可以。
+		 */
+		angular.module('app1',[])
+		.controller('ctrl1',['$scope','$rootScope',function($scope,$rootScope){
+			
+			$scope.name = "angular"
+			
+			$rootScope.msg = 'hello angular@1.x'
+		}])
+		.controller('ctrl11',["$scope","$rootScope",function($scope,$rootScope){
+			
+		}])
+		
+		
+		
+		angular.module('app2',[])
+		.controller('ctrl2',['$scope',function($scope){
+			
+			$scope.age = 8
+		}])
+		
+		//angular.bootstrap()手动启动ng-app
+		//参数1:ng-app所在的DOM元素
+		//参数2:ng-app的值
+		angular.bootstrap(document.querySelector('#ngApp2'),['app2'])
+	</script>
+</html>

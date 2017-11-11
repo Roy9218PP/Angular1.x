@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>ngRoute基础</title>
+		<script src="../../angular.js"></script>
+		<script src="angular-route.min.js"></script>
+	</head>
+
+	<body ng-controller="ctrl">
+		<ul>
+			<li ng-repeat="aRoute in routes">
+				<a href="{{aRoute.route}}">{{aRoute.name}}</a></li>
+		</ul>
+		
+		<!--ng-view 是angular提供的路由模板的挂载点指令-->
+		<div ng-view></div>
+		
+		<!--指令既可以当做标签也可以当做属性使用。所以称之为指令。-->
+		<ng-view></ng-view>
+		
+	</body>
+	<script type="text/javascript">
+		//angular要想使用angular-route模块的功能，需要在angular模块设置依赖，此处依赖的是ngRoute
+		angular.module('app', ['ngRoute'])
+		//$routeProvider是angular-route提供的一个路由控制的服务
+		.config(["$routeProvider",'$locationProvider',function($routeProvider,$locationProvider){
+			//ngRoute1.6.x需要设置路由的hash值的前缀为空
+			$locationProvider.hashPrefix('');
+			//使用when()监听路由
+			//参数1:路由地址
+			//参数2:配置信息
+			$routeProvider
+			.when('/baidu',{
+				//template配置路由被访问时加载的模板
+				//template:"<h1>百度的路由被访问了</h1>",
+				
+				//templateUrl是路由加载的模板文件
+				templateUrl:"百度.html",
+				
+				//指定路由对应加载的controller
+				controller:"baiduCtrl",
+				
+				//该controller起别名
+				controllerAs:"bdCtrl",
+				
+				//caseInsensitiveMatch路径是否不区分大小写
+				caseInsensitiveMatch:true,
+				
+				//resolve是为该路由配置一个异步的promise操作，可以控制在异步操作执行结束后当promise的状态为resolve时再渲染该路由对应的模板内容。并且在resolve时可以将数据传递给对应的controller，通过依赖注入的方式把数据注入到controller内
+				resolve:{
+					
+					//$q是angular提供的一个服务用来获取defer或是promise
+					delay:function($q,$timeout){
+						
+						//获取一个defer对象
+						var defer = $q.defer()
+						
+						$timeout(function(){
+							
+							//异步操作code...
+							
+							//把defer状态改为resolved
+							defer.resolve({name:"roy",age:28})
+							
+						},3000)
+						
+						//返回promise
+						return defer.promise
+					}
+				}
+			})
+			.when('/tmall',{
+				template:"<h1>天猫的路由被访问了</h1>"
+			})
+			.when('/tencent',{
+				template:"<h1>腾讯的路由被访问了</h1>"
+			})
+			//在监听的路由都为被访问成功时加载的内容
+			.otherwise({
+				template:"<h1>默认显示内容</h1>"
+			})
+			
+		}])
+		.controller('ctrl', ['$scope',"$location", function($scope,$location) {
+
+				$scope.routes = [{
+					route: "#/Baidu",
+					name: "百度"
+				}, {
+					route: "#/tmall",
+					name: "天猫"
+				}, {
+					route: "#/tencent",
+					name: "腾讯"
+				}]
+				
+				//ngRoute提供了路由变化事件的钩子函数
+				//$routeChangeStart路由将要变化时触发的事件
+				$scope.$on('$routeChangeStart',function(e,to,from){
+					
+					alert('路由将要变化了')
+					//console.log($location)
+					console.log(to)
+					console.log(from)
+				})
+				
+				//$routeChangeSuccess路由切换成功时触发的事件
+				$scope.$on("$routeChangeSuccess",function(e,to,from){
+					
+					alert('路由切换完成')
+					console.log(to)
+					console.log(from)
+				})
+				
+				//$routeChangeError路由切换失败时触发的事件
+				$scope.$on("$routeChangeError",function(){
+					
+					alert('路由切换失败')
+				})
+		}])
+		.controller('baiduCtrl',["$scope","delay",function($scope,delay){
+			
+			alert('Baidu')
+			console.log(delay)
+			
+		}])
+	</script>
+
+</html>

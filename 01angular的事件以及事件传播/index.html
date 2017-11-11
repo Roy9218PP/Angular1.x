@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<meta charset="UTF-8">
+		<title>事件以及事件传播</title>
+		<script src="../angular.js"></script>
+		<style type="text/css">
+			#parentCtrl{
+				border: 5px solid red;
+				padding: 30px;
+			}
+			#currentCtrl{
+				border: 3px solid blue;
+				padding: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<!--angular的事件传播机制和DOM的事件传播机制不太一样，DOM是依靠挖洞和冒泡进行事件传播，而对于angular的事件是依靠$scope的$emit()往上层作用域传播,$broadcast()往子作用域传播,使用$on()监听事件-->
+		<div ng-controller="parentCtrl" id="parentCtrl">
+			{{currentName}}
+			<h1>{{name}} - Controller</h1>
+			<button ng-click="myClick()">click me</button>
+			
+			<div ng-mouseenter="myMouseEnter()">dddddddddddddd</div>
+			
+			<form action="" method="post" ng-submit="mySubmit($event)">
+				
+				<!--ng-copy拷贝内容的时候触发的事件，比如右键或是Ctrl+c
+					类似的还有
+					ng-cut  剪切
+					ng-paste 粘贴
+				-->
+				<input type="text" ng-copy="myCopy()" value="test" />
+				
+				<input type="submit" value="提交"/>
+			</form>
+			
+			
+			<div ng-controller="currentCtrl" id="currentCtrl">
+				<h1>{{name}}</h1>
+				<h1>{{currentName}} - Controller</h1>
+				<button ng-click="currentClick()">current click</button>
+			</div>
+			
+			<div ng-controller="siblingCtrl" id="currentCtrl">
+				<h1>{{name}}</h1>
+				<h1>{{currentName}}</h1>
+				<h1>{{siblingName}} - Controller</h1>
+				<button ng-click="siblingClick()">sibling click</button>
+			</div>
+		</div>
+		
+			
+	</body>
+	
+	<script type="text/javascript">
+		angular.module('app',[])
+		.controller('parentCtrl',['$scope',function($scope){
+			
+			$scope.myClick = function(){
+				
+				//alert('click')
+				//$broadcast往子作用域传播事件,同时可以传递参数
+				$scope.$broadcast('broadcast','hello children')
+			}
+			
+			$scope.myMouseEnter = function(){
+				
+				//alert('鼠标进入')
+			}
+			
+			$scope.mySubmit = function(e){
+				
+				e.preventDefault()
+				
+				//return false
+			}
+			$scope.myCopy = function(){
+				
+				alert('拷贝了')
+			}
+			
+			$scope.name = 'parent'
+			
+			//此处第一个参数不是事件传播的参数，而是angular封装的事件对象
+			//第二个参数才是传递的数据参数
+			$scope.$on('emit',function(e,param){
+				
+				
+				console.log(param)
+				
+				alert('parent收到了' + param)
+			})
+			
+		}])
+		.controller('currentCtrl',['$scope',function($scope){
+			
+			$scope.currentClick = function(){
+				
+				//alert('current click')
+				
+				//$emit()往上级作用域传播，同时可以传参数。同胞和子作用域都监听不到该事件
+				//$scope.$emit('emit','hello parent')
+				
+				//$scope.$parent.$broadcast借助父级作用域$parent往同胞作用域传值
+				$scope.$parent.$broadcast('broadcast')
+				
+			}
+			
+			$scope.currentName = 'current'
+		}])
+		.controller('siblingCtrl',["$scope",function($scope){
+			
+			$scope.siblingName = 'sibling'
+			$scope.siblingClick = function(){
+				
+			}
+			
+			$scope.$on('emit',function(){
+				
+				alert('我能监听到同级的emit事件吗？')
+			})
+			
+			$scope.$on('broadcast',function(e,param){
+				
+				alert('sibling监听到了' + param)
+			})
+			
+		}])
+	</script>
+</html>

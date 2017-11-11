@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--ng-app一旦赋值，就需要使用angular.module定义该app模块，否则就报错-->
+<html ng-app="myApp">
+	<head>
+		<meta charset="UTF-8">
+		<title>angular的controller</title>
+		<script src="../angular.js"></script>
+	</head>
+	<!--ng-controller是定义该ng-app对应的控制器。并且在ng-contrller指令所在的元素内划分了一个该控制器的有效作用域。
+		
+		angular是按照MVC的设计模式来设计的(有的人认为是MVVM)
+		MVC: Model - View - Controller,即三层架构
+		Model层:即业务逻辑层。用来处理业务逻辑以及封装数据模型。
+		View层:即视图层。用来负责页面的显示。
+		Controller层:即控制层。用来协调Model和View之间的交互。比如View的用户输入事件由Controller捕获交给Model来处理，model处理完把最新数据结果返回，由view显示。
+		所以三者的关系可以看做是:处理器(主机) - 显示器 - 鼠标/键盘。
+		
+		MVVM:Model - View - ViewModel
+		ViewModel:体现在指令。即通过指令可以把Model的变量和View(HTML)进行绑定，同时甚至可以ng-init定义变量。这样一来Model和View就紧密联系在一起，并且会相互影响，所以有人认为Vue和angular是一种MVVM的设计模式。
+	-->
+	<body ng-controller="ctrl" ng-init="name='angular'">
+		<h1>Hello {{name}}</h1>
+		<h1>Hello {{ngName}}</h1>
+	</body>
+	
+	<script type="text/javascript">
+		
+		
+		//angular.module是构建一个angular应用模块,对于angular来讲,项目是由一个个module构成的，而其他一切内容都是要挂靠在module之下。
+		//参数1:该模块的挂载点。即ng-app指令的值。
+		//参数2:该模块所以来的其他模块。此处暂且传空数组。
+		var app = angular.module('myApp',[])
+		
+		//定义该模块的控制器
+		//参数1:控制器名称.ng-controller指令的值。
+		//参数2:该控制器的依赖注入项。
+		//依赖注入(Dependencies Injection 简称DI)是angular应外一个核心概念。它是一个强大的设计概念。因为对于一个项目来讲模块之间有时候是需要相互依赖的，并且angular的服务和过滤器等等也需要被某些模块所依赖，这时就需要使用"依赖注入"的方式把这些模块注入到对应的功能模块内。
+		//它的实现方式也极其简单强大，因为我们只需提供对应的名称，然后就可以完成依赖，然后再把依赖的模块或是功能通过名称的方式注入到对应的功能模块内即可。
+		//$scope就是angular提供一个获取controller作用的服务
+		app.controller('ctrl',['$scope',function($scope){
+			
+			//往作用于内添加变量
+			$scope.ngName = 'Angular'
+		}])
+		
+		//上边的一种严格的依赖注入规则，可以使用下边的非严格依赖注入模式代替，但是只能适用于个别情况下。
+		/*
+		app.controller('ctrl',function($scope){
+			$scope.ngName = 'Angular！！！'
+		})
+		*/
+		
+		//可以连续的打点链式调用
+		/*
+		angular.module('myApp',[])
+		.controller('ctrl',['$scope',function($scope){
+			
+		}])
+		*/
+	</script>
+</html>
